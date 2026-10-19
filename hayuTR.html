@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tirzepatida - Ficha Técnica y Calculadora</title>
+    <style>
+        :root {
+            --bg-dark: #0b0f19;
+            --bg-card: rgba(11, 15, 25, 0.8);
+            --neon-blue: #00d2ff;
+            --deep-blue: #3a7bd5;
+            --text-light: #ffffff;
+            --text-muted: #a0aec0;
+            --wa-green: #25d366;
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-light);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            line-height: 1.6;
+        }
+
+        /* Encabezado */
+        header {
+            text-align: center;
+            padding: 40px 20px 20px;
+            background: linear-gradient(to bottom, rgba(58, 123, 213, 0.2), transparent);
+            border-bottom: 1px solid rgba(0, 210, 255, 0.2);
+        }
+        
+        header h1 {
+            color: var(--neon-blue);
+            font-size: 2.5rem;
+            margin: 0;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+
+        header p {
+            color: var(--text-muted);
+            font-size: 1.1rem;
+            margin-top: 10px;
+        }
+
+        .main-container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* Tarjetas de Módulos */
+        .module-card {
+            background: var(--bg-card);
+            border: 1px solid var(--neon-blue);
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 40px;
+            box-shadow: 0 0 20px rgba(0, 210, 255, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .module-card:hover {
+            box-shadow: 0 0 30px rgba(0, 210, 255, 0.2);
+        }
+
+        .module-title {
+            color: var(--neon-blue);
+            font-size: 1.5rem;
+            margin-top: 0;
+            margin-bottom: 20px;
+            border-bottom: 1px solid rgba(0, 210, 255, 0.3);
+            padding-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        /* Módulo 1: Ficha Técnica */
+        .tech-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        
+        .tech-list li {
+            margin-bottom: 15px;
+            padding-left: 25px;
+            position: relative;
+        }
+        
+        .tech-list li::before {
+            content: "▸";
+            color: var(--neon-blue);
+            position: absolute;
+            left: 0;
+            font-size: 1.2rem;
+        }
+
+        .tech-list strong {
+            color: #fff;
+        }
+
+        /* Módulo 2: Calculadora (Estilos previos integrados) */
+        .calc-group { margin-bottom: 15px; }
+        .calc-group label { display: block; margin-bottom: 5px; color: var(--text-muted); font-size: 0.9rem; }
+        .calc-group input {
+            width: 100%;
+            padding: 12px;
+            background: #1a202c;
+            border: 1px solid var(--deep-blue);
+            color: white;
+            border-radius: 5px;
+            box-sizing: border-box;
+            outline: none;
+            transition: border-color 0.3s;
+        }
+        .calc-group input:focus {
+            border-color: var(--neon-blue);
+            box-shadow: 0 0 8px rgba(0, 210, 255, 0.3);
+        }
+
+        button.calc-btn {
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(90deg, var(--neon-blue) 0%, var(--deep-blue) 100%);
+            border: none;
+            color: white;
+            font-weight: bold;
+            font-size: 1.1rem;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: 0.3s;
+            margin-top: 10px;
+        }
+        button.calc-btn:hover { opacity: 0.9; box-shadow: 0 4px 20px rgba(0, 210, 255, 0.4); }
+
+        .result {
+            margin-top: 25px;
+            padding: 20px;
+            background: #1a202c;
+            border-radius: 10px;
+            border: 1px solid var(--deep-blue);
+            display: none;
+            text-align: center;
+        }
+        .units-display { font-size: 3.5rem; font-weight: bold; color: white; line-height: 1; margin: 10px 0; }
+        .error-msg { color: #ff4757; font-size: 0.9rem; margin-top: 10px; display: none; text-align: center; }
+        
+        .syringe-wrapper { display: flex; justify-content: center; margin: 25px 0 15px; }
+        .syringe-container {
+            width: 45px; height: 220px;
+            border: 2px solid var(--text-muted);
+            border-radius: 6px;
+            position: relative;
+            background: rgba(255,255,255,0.03);
+            overflow: hidden;
+        }
+        .syringe-fill {
+            position: absolute; bottom: 0; width: 100%;
+            background: linear-gradient(to top, var(--deep-blue), var(--neon-blue));
+            height: 0%;
+            transition: height 0.8s cubic-bezier(0.25, 0.8, 0.25, 1);
+            box-shadow: 0 0 15px rgba(0, 210, 255, 0.5);
+        }
+        .syringe-lines {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background: repeating-linear-gradient(to bottom, transparent, transparent 19px, rgba(255,255,255,0.4) 19px, rgba(255,255,255,0.4) 21px);
+            z-index: 2;
+        }
+
+        /* Módulo 3: COA */
+        .coa-container {
+            text-align: center;
+        }
+        .coa-box {
+            background: #1a202c;
+            border: 1px dashed var(--neon-blue);
+            padding: 30px;
+            border-radius: 10px;
+            margin-top: 15px;
+            color: var(--text-muted);
+        }
+        .coa-icon {
+            font-size: 3rem;
+            margin-bottom: 10px;
+            display: block;
+        }
+
+        /* Botón Flotante y Footer WhatsApp */
+        .whatsapp-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            width: 100%;
+            padding: 15px;
+            margin-top: 20px;
+            background: rgba(37, 211, 102, 0.1);
+            border: 1px solid var(--wa-green);
+            color: var(--wa-green);
+            font-weight: bold;
+            font-size: 1.1rem;
+            text-decoration: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-sizing: border-box;
+        }
+        .whatsapp-btn:hover {
+            background: var(--wa-green);
+            color: #000;
+            box-shadow: 0 0 20px rgba(37, 211, 102, 0.4);
+        }
+
+        footer {
+            text-align: center;
+            padding: 30px;
+            color: var(--text-muted);
+            border-top: 1px solid rgba(255,255,255,0.1);
+            margin-top: 40px;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>Tirzepatida</h1>
+        <p>Portal de Información, Dosificación y Calidad</p>
+    </header>
+
+    <div class="main-container">
+
+        <!-- MÓDULO 1: FICHA TÉCNICA -->
+        <div class="module-card">
+            <h2 class="module-title">📄 Ficha Técnica</h2>
+            <p style="color: var(--text-muted); margin-bottom: 20px;">
+                La Tirzepatida es un agonista dual de los receptores GIP y GLP-1, diseñado para la investigación y el control metabólico.
+            </p>
+            <ul class="tech-list">
+                <li><strong>Secuencia / Estructura:</strong> Agonista dual GIP/GLP-1.</li>
+                <li><strong>Presentación:</strong> Vial liofilizado.</li>
+                <li><strong>Pureza garantizada:</strong> >99% (Ver certificado COA).</li>
+                <li><strong>Almacenamiento (Liofilizado):</strong> Mantener en un lugar fresco y oscuro o refrigerado (2°C - 8°C).</li>
+                <li><strong>Almacenamiento (Reconstituido):</strong> Refrigerar obligatoriamente (2°C - 8°C) y proteger de la luz.</li>
+                <li><strong>Uso:</strong> Exclusivo para investigación y uso de laboratorio.</li>
+            </ul>
+        </div>
+
+        <!-- MÓDULO 2: CALCULADORA DE DOSIS -->
+        <div class="module-card">
+            <h2 class="module-title">💉 Calculadora de Dosis</h2>
+            
+            <div class="calc-group">
+                <label>Tamaño del Vial (mg):</label>
+                <input type="number" id="vialSize" value="10" placeholder="Ej. 10" min="0.1" step="0.1">
+            </div>
+            
+            <div class="calc-group">
+                <label>Agua Bacteriostática añadida (ml):</label>
+                <input type="number" id="waterAdded" value="1" placeholder="Ej. 1 o 2" min="0.1" step="0.1">
+            </div>
+            
+            <div class="calc-group">
+                <label>Dosis requerida (mg):</label>
+                <input type="number" id="dose" value="2.5" placeholder="Ej. 2.5" min="0.1" step="0.1">
+            </div>
+            
+            <div id="errorMsg" class="error-msg">Por favor, llena todos los campos con valores válidos mayores a 0.</div>
+
+            <button class="calc-btn" onclick="calculateDose()">Calcular Dosis</button>
+
+            <div class="result" id="resultBox">
+                <p style="color: var(--neon-blue); font-weight: bold; margin: 0; letter-spacing: 1px; font-size: 0.9rem;">DEBES EXTRAER:</p>
+                
+                <div class="units-display">
+                    <span id="unitsResult">0</span> 
+                    <span style="font-size: 1.2rem; font-weight: normal; color: var(--text-muted);">Unidades</span>
+                </div>
+                <p style="color: var(--text-muted); margin: 0; font-size: 1.1rem;">o <span id="mlResult" style="color: white; font-weight: bold;">0</span> ml</p>
+                
+                <div class="syringe-wrapper">
+                    <div class="syringe-container">
+                        <div class="syringe-fill" id="syringeFill"></div>
+                        <div class="syringe-lines"></div>
+                    </div>
+                </div>
+                
+                <p style="font-size: 0.8rem; color: #718096; margin-bottom: 0;">*Asumiendo jeringa estándar U-100 (100 U = 1 ml)</p>
+            </div>
+        </div>
+
+        <!-- MÓDULO 3: CERTIFICADO COA -->
+        <div class="module-card">
+            <h2 class="module-title">🔬 Certificado de Análisis (COA)</h2>
+            <div class="coa-container">
+                <p>Respaldamos la calidad de nuestros productos. Cada lote pasa por estrictas pruebas de laboratorio para garantizar una pureza superior al 99%.</p>
+                
+                <div class="coa-box">
+                    <span class="coa-icon">📋</span>
+                    <h3>COA - Tirzepatida Lote #Ultimo</h3>
+                    <p>Status: <strong>Aprobado (Pureza >99%)</strong></p>
+                    <p style="font-size: 0.85rem; margin-top: 15px;">*Para solicitar el documento PDF oficial del lote actual, por favor contáctanos vía WhatsApp.*</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- CONTACTO WHATSAPP GENERAL -->
+        <a href="https://wa.me/525579449020" class="whatsapp-btn" target="_blank">
+            📲 Haz tu pedido o consulta por WhatsApp
+        </a>
+
+    </div>
+
+    <footer>
+        <p>© 2026 - Herramienta de Dosificación e Información</p>
+    </footer>
+
+    <script>
+    function calculateDose() {
+        const vialSize = parseFloat(document.getElementById('vialSize').value);
+        const waterAdded = parseFloat(document.getElementById('waterAdded').value);
+        const dose = parseFloat(document.getElementById('dose').value);
+        const errorMsg = document.getElementById('errorMsg');
+        const resultBox = document.getElementById('resultBox');
+        const syringeFill = document.getElementById('syringeFill');
+
+        if(!vialSize || !waterAdded || !dose || vialSize <= 0 || waterAdded <= 0 || dose <= 0) {
+            errorMsg.style.display = 'block';
+            resultBox.style.display = 'none';
+            syringeFill.style.height = '0%';
+            return;
+        }
+        
+        errorMsg.style.display = 'none';
+
+        const volumeToInject = (dose / vialSize) * waterAdded;
+        const unitsToInject = volumeToInject * 100;
+
+        document.getElementById('unitsResult').innerText = Math.round(unitsToInject);
+        document.getElementById('mlResult').innerText = volumeToInject.toFixed(2);
+        resultBox.style.display = 'block';
+
+        setTimeout(() => {
+            let fillPercentage = (unitsToInject / 100) * 100;
+            if(fillPercentage > 100) fillPercentage = 100;
+            syringeFill.style.height = fillPercentage + '%';
+        }, 50);
+    }
+    </script>
+</body>
+</html>
